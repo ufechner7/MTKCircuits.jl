@@ -18,6 +18,7 @@ function ShockleyDiode(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
         v(t) = 0.0
         i(t)
     end
+    
     systems = @named begin
         p = Pin()
         n = Pin()
@@ -95,6 +96,7 @@ function PMSG(;
 
     @parameters R = R L = L Ψ = Ψ J = J F = F p = p Tf = Tf
     @variables  ia(t) = 0 ib(t) = 0 ic(t) = 0 ωₘ(t) = 0 Θ(t) = 0 Tₑ(t) = 0
+    D = Differential(t)
 
     eqs = [
 
@@ -170,3 +172,18 @@ begin
     end
 
 end
+
+@named sys = WindDiodes(R_L = 10.0, p = 4)
+
+sysc = mtkcompile(sys; warn_initialize_determined = false)
+prob = ODEProblem(sysc, [], (0.0, 15.0); warn_initialize_determined = false)
+
+sol = solve(prob, Rodas5P(), abstol = 1.0e-9, reltol = 1.0e-12, dense = false)
+
+time   = sol.t
+v_load = sol[sys.rload.v]
+i_load = sol[sys.rload.i]
+ω_m    = sol[sys.gen.ωₘ]
+
+plot(time, i_load, v_load; xlabel="time [s]", ylabels=["Current [A]", "Voltage [V]"], labels=["load current", "load voltage"])
+plot(time, [ω_m]; xlabel="time [s]", ylabel=L"\omega_m \; \mathrm{[rad/s]}", labels=["rotor speed"])
