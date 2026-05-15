@@ -53,3 +53,13 @@ To run the example:
 ```julia
 include("examples/coupled_system.jl)
 ```
+
+The simulation finishes without error, but with one warning:
+
+```text
+┌ Warning: Did not converge after `maxiters = 100` substitutions. Either there \
+│ is a cycle in the rules or `maxiters` needs to be higher.
+└ @ Symbolics ~/.julia/packages/Symbolics/oZEAe/src/variable.jl:451
+```
+
+The result does not look correct, though.
