@@ -62,7 +62,8 @@ The simulation finishes without error, but with one warning:
 └ @ Symbolics ~/.julia/packages/Symbolics/oZEAe/src/variable.jl:451
 ```
 
-The result does not look correct, though.
+Using the RadauIIA5 solver, the example works:
+![3-phase example]](image-5.png)
 
 ## Simplified examples
 
