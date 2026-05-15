@@ -134,7 +134,7 @@ end
 begin
     function WindDiodes(; name, R_L = 10.0, p = 4)
 
-        @named aero = Constant(k = -97/9)
+        @named aero = Constant(k = -97/8)
         #@named aero = Ramp(offset=0.0, height=-97.24, duration=15.0, start_time=0.0)
         @named gen = PMSG(p = p)
         @named zbridge = DiodeBridge()
@@ -175,7 +175,7 @@ end
 sysc = mtkcompile(sys; warn_initialize_determined = false)
 prob = ODEProblem(sysc, [], (0.0, 3.0); warn_initialize_determined = false)
 
-sol = solve(prob, RadauIIA5(autodiff=AutoForwardDiff(), κ = 0.005), abstol = 1e-8, reltol = 1e-8, saveat = 0.0001)
+sol = solve(prob, RadauIIA5(autodiff=AutoForwardDiff(), κ = 0.005), abstol = 1e-7, reltol = 1e-9, saveat = 0.0001)
 
 time    = sol.t
 ω_rpm   = sol[sys.gen.ωₘ] .* (30 / π)    # rad/s → RPM
