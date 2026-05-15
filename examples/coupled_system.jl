@@ -3,7 +3,7 @@ using ModelingToolkit: t_nounits as t
 using ModelingToolkitStandardLibrary.Electrical
 using ModelingToolkitStandardLibrary.Blocks
 using OrdinaryDiffEq
-using ControlPlots, LaTeXStrings
+using ControlPlots
 
 function ShockleyDiode(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
 
@@ -133,7 +133,7 @@ end
 begin
     function WindDiodes(; name, R_L = 10.0, p = 4)
 
-        @named aero = Constant(k = -97)
+        @named aero = Constant(k = -97/100)
         #@named aero = Ramp(offset=0.0, height=-97.24, duration=15.0, start_time=0.0)
         @named gen = PMSG(p = p)
         @named zbridge = DiodeBridge()
@@ -172,14 +172,19 @@ end
 @named sys = WindDiodes(R_L = 10.0, p = 4)
 
 sysc = mtkcompile(sys; warn_initialize_determined = false)
-prob = ODEProblem(sysc, [], (0.0, 15.0); warn_initialize_determined = false)
+prob = ODEProblem(sysc, [], (0.0, 3.0); warn_initialize_determined = false)
 
-sol = solve(prob, Rodas5P(), dt = 0.00001, adaptive = false, maxiters = Int(1.0e9))
+sol = solve(prob, Rodas5P(), dt = 0.0001, adaptive = false, maxiters = Int(1.0e7))
 
-time   = sol.t
-v_load = sol[sys.rload.v]
-i_load = sol[sys.rload.i]
-ω_m    = sol[sys.gen.ωₘ]
+time    = sol.t
+ω_rpm   = sol[sys.gen.ωₘ] .* (30 / π)    # rad/s → RPM
+v_dc    = sol[sys.cap.v]                   # DC-bus voltage
+i_load  = sol[sys.rload.i]                 # DC load current
+i_a     = sol[sys.gen.ia]                  # phase-a armature current
+i_b     = sol[sys.gen.ib]                  # phase-b armature current
+i_c     = sol[sys.gen.ic]                  # phase-c armature current
 
-plot(time, i_load, v_load; xlabel="time [s]", ylabels=["Current [A]", "Voltage [V]"], labels=["load current", "load voltage"])
-plot(time, [ω_m]; xlabel="time [s]", ylabel=L"\omega_m \; \mathrm{[rad/s]}", labels=["rotor speed"])
+plotx(time, ω_rpm, v_dc, i_load, i_a, i_b, i_c;
+      ylabels = ["Speed [RPM]", "DC voltage [V]", "Load current [A]",
+                 "ia [A]", "ib [A]", "ic [A]"],
+      labels  = ["ωₘ", "v_dc", "i_load", "ia", "ib", "ic"])
