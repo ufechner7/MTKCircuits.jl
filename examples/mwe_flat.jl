@@ -34,7 +34,7 @@ const _Ψ_g     = 0.192          # flux linkage                  [Wb]
 const _J_g     = 0.011          # rotor inertia                 [kg·m²]
 const _F_g     = 0.001889       # viscous damping               [N·m·s]
 const _p_g     = 4              # pole pairs
-const _T_aero  = -97.0          # aerodynamic torque (Constant k = -97)
+const _T_aero  = -97.0/100          # aerodynamic torque (Constant k = -97)
 
 const _I_s     = 1.0e-6                             # diode sat. current   [A]
 const _V_T     = 1.380649e-23 * 293.15 / 1.602e-19  # thermal voltage ≈ 0.02527 V
@@ -78,15 +78,16 @@ eqs = [
 
 @named sys = System(eqs, t)
 sysc = mtkcompile(sys; warn_initialize_determined = false)
-prob = ODEProblem(sysc, [], (0.0, 1.0); warn_initialize_determined = false)
+prob = ODEProblem(sysc, [], (0.0, 30.0); warn_initialize_determined = false)
 
-sol = solve(prob, Rodas5P(), abstol = 1e-9, reltol = 1e-12, dense = false)
+sol = solve(prob, Rodas5P(), abstol = 1e-9, reltol = 1e-12, dense = false, saveat = 0.0001)
 
-time  = sol.t
-ω_rpm = sol[ωₘ] .* (30 / π)        # rad/s → RPM
-v_dc  = sol[v_cap]                   # DC-bus voltage (= vp − vn)
-i_a   = sol[ia]                      # armature current
+time    = sol.t
+ω_rpm   = sol[ωₘ] .* (30 / π)           # rad/s → RPM
+v_dc    = sol[v_cap]                      # DC-bus voltage (= vp − vn)
+i_a     = sol[ia]                         # armature current
+i_load  = v_dc ./ _R_load                 # DC load current
 
-plotx(time, ω_rpm, v_dc, i_a;
-      ylabels = ["Speed [RPM]", "DC voltage [V]", "Armature current [A]"],
-      labels  = ["ωₘ", "v_dc", "ia"])
+plotx(time, ω_rpm, v_dc, i_load, i_a;
+      ylabels = ["Speed [RPM]", "DC voltage [V]", "Load current [A]", "Armature current [A]"],
+      labels  = ["ωₘ", "v_dc", "i_load", "ia"])
