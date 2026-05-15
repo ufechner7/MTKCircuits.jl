@@ -1,4 +1,4 @@
-# Test cases for electrical circuits, using ModelingTookit (MTK)
+# Test cases for electrical circuits, using ModelingToolkit (MTK)
 
 ## Installation
 
