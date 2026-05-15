@@ -45,7 +45,7 @@ const _C_cap   = 1.0e-6         # DC-bus capacitance            [F]
 
 # ── Variables ────────────────────────────────────────────────────────────────────
 @variables ia(t)=0.0  ωₘ(t)=0.0  Θ(t)=0.0  v_cap(t)=0.0   # differential states
-@variables va(t)  vp(t)                                       # algebraic node voltages
+@variables va(t)=0.0  vp(t)=0.0                               # algebraic node voltages (guesses)
 
 # ── Symbolic branch-current expressions (inlined — no extra variables) ──────────
 #   D1 (va → vp),  D2 (vn → va),  R1 (va → vp),  R2 (vn → va);  vn = vp − v_cap
