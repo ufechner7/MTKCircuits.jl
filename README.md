@@ -25,7 +25,7 @@ To run the example:
 include("examples/rectifier.jl)
 ```
 
-**Result:*
+**Result:**
 
 ![Rectifier output](image-1.png)
 
