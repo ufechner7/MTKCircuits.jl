@@ -49,12 +49,12 @@ function DiodeBridge(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
     @named R4 = Resistor(R = 1.0e8)
     @named R5 = Resistor(R = 1.0e8)
     @named R6 = Resistor(R = 1.0e8)
-    @named RS1 = Resistor(R = 0.02)
-    @named RS2 = Resistor(R = 0.02)
-    @named RS3 = Resistor(R = 0.02)
-    @named RS4 = Resistor(R = 0.02)
-    @named RS5 = Resistor(R = 0.02)
-    @named RS6 = Resistor(R = 0.02)
+    @named RS1 = Resistor(R = 0.05)
+    @named RS2 = Resistor(R = 0.05)
+    @named RS3 = Resistor(R = 0.05)
+    @named RS4 = Resistor(R = 0.05)
+    @named RS5 = Resistor(R = 0.05)
+    @named RS6 = Resistor(R = 0.05)
 
     eqs = [
 
@@ -146,15 +146,15 @@ end
 begin
     function WindDiodes(; name, R_L = 10.0, p = 4)
 
-        @named aero = Constant(k = -97/4)
+        @named aero = Constant(k = -97/3)
         #@named aero = Ramp(offset=0.0, height=-97.24, duration=15.0, start_time=0.0)
         @named gen = PMSG(p = p)
         @named zbridge = DiodeBridge()
         @named rload = Resistor(R = R_L)
         @named gnd = Ground()   # fija V_neutro = 0
-        @named leak_p = Resistor(R = 1.0e6)
-        @named leak_n = Resistor(R = 1.0e6)
-        @named cap = Capacitor(C = 1.0e-6, v = 0.0)
+        @named leak_p = Resistor(R = 1e6)
+        @named leak_n = Resistor(R = 1e6)
+        @named cap = Capacitor(C = 1e-6, v = 0.0)
 
         eqs = [
 
@@ -187,7 +187,7 @@ end
 sysc = mtkcompile(sys; warn_initialize_determined = false)
 prob = ODEProblem(sysc, [], (0.0, 3.0); warn_initialize_determined = false)
 
-sol = solve(prob, RadauIIA5(autodiff=AutoForwardDiff(), κ = 0.005), abstol = 1e-8, reltol = 0.5e-9, saveat = 0.0001, maxiters = 1e7)
+sol = solve(prob, RadauIIA5(autodiff=AutoForwardDiff(), κ = 0.005), abstol = 1.1e-8, reltol = 0.5e-9, saveat = 0.00005, maxiters = 1e7)
 
 time    = sol.t
 ω_rpm   = sol[sys.gen.ωₘ] .* (30 / π)    # rad/s → RPM
