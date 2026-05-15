@@ -65,6 +65,7 @@ The simulation finishes without error, but with one warning:
 The result does not look correct, though.
 
 ## Simplified examples
+
 I created two simplified examples with a synchronous machine and a rectifier:
 
 ```text
