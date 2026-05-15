@@ -58,7 +58,7 @@ begin
 	        pin_a.i + pin_b.i + pin_c.i + pin_n.i ~ 0,
 	    ]
 	
-	    System(eqs, t, [], [RMSVoltage, Phase, Freq, τ];
+	    System(eqs, t, [ramp], [RMSVoltage, Phase, Freq, τ];
 	        systems = [pin_a, pin_b, pin_c, pin_n],
 	        name)
 	end
