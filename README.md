@@ -43,3 +43,13 @@ To run the example:
 ```julia
 include("examples/synchronous_machine.jl)
 ```
+
+## Coupled System
+
+This system combines the synchronous machine and the rectifier.
+
+To run the example:
+
+```julia
+include("examples/coupled_system.jl)
+```
