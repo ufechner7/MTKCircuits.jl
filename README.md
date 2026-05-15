@@ -63,7 +63,8 @@ The simulation finishes without error, but with one warning:
 ```
 
 Using the RadauIIA5 solver, the example works:
-![3-phase example]](image-5.png)
+
+![3-phase example](image-5.png)
 
 ## Simplified examples
 
