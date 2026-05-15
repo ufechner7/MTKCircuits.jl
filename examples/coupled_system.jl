@@ -104,19 +104,15 @@ function PMSG(;
         D(ib) ~ (1 / L) * (Ψ * p * ωₘ * sin(p * Θ - 2π / 3) - R * ib - (pin_b.v - pin_n.v)),
         D(ic) ~ (1 / L) * (Ψ * p * ωₘ * sin(p * Θ + 2π / 3) - R * ic - (pin_c.v - pin_n.v)),
 
-
         Tₑ ~ Ψ * p * (ia * sin(p * Θ) + ib * sin(p * Θ - 2π / 3) + ic * sin(p * Θ + 2π / 3)),
-
 
         D(ωₘ) ~ (1 / J) * (input1.u - Tₑ - Tf - F * ωₘ),
         D(Θ) ~ ωₘ,
-
 
         pin_a.i ~ -ia,
         pin_b.i ~ -ib,
         pin_c.i ~ -ic,
         pin_a.i + pin_b.i + pin_c.i + pin_n.i ~ 0,
-
 
         output1.u ~ Tₑ,
         output2.u ~ ωₘ,
