@@ -35,3 +35,9 @@ After calling `mtkcompile()` the system is a pure DAE system without any differe
 ## Synchronous Machine
 
 ![Synchronous Machine](image-2.png)
+
+To run the example:
+
+```julia
+include("examples/synchronous_machine.jl)
+```
