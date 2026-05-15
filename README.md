@@ -77,12 +77,14 @@ Both work. The first one gives the "Did not converge..." warning, the second one
 Both give very similar results when running the simulation.
 
 ## Two phase examples
+
 I created two simplified examples with a synchronous machine and a rectifier:
 
 ```text
 coupled_system_mwe2.jl
 mwe_flat2.jl
 ```
+
 Both work. The first one gives the "Did not converge..." warning, the second one not.
 Both give very similar results when running the simulation.
 
