@@ -43,12 +43,12 @@ function DiodeBridge(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
     @named D4 = ShockleyDiode(I_S = I_S, n_ideal = n_ideal, T_K = T_K)
     @named D5 = ShockleyDiode(I_S = I_S, n_ideal = n_ideal, T_K = T_K)
     @named D6 = ShockleyDiode(I_S = I_S, n_ideal = n_ideal, T_K = T_K)
-    @named C1 = Capacitor(C = 1000e-12, v = 0.0)
-    @named C2 = Capacitor(C = 1000e-12, v = 0.0)
-    @named C3 = Capacitor(C = 1000e-12, v = 0.0)
-    @named C4 = Capacitor(C = 1000e-12, v = 0.0)
-    @named C5 = Capacitor(C = 1000e-12, v = 0.0)
-    @named C6 = Capacitor(C = 1000e-12, v = 0.0)
+    @named C1 = Capacitor(C = 2000e-12, v = 0.0)
+    @named C2 = Capacitor(C = 2000e-12, v = 0.0)
+    @named C3 = Capacitor(C = 2000e-12, v = 0.0)
+    @named C4 = Capacitor(C = 2000e-12, v = 0.0)
+    @named C5 = Capacitor(C = 2000e-12, v = 0.0)
+    @named C6 = Capacitor(C = 2000e-12, v = 0.0)
     @named R1 = Resistor(R = 1.0e8)
     @named R2 = Resistor(R = 1.0e8)
     @named R3 = Resistor(R = 1.0e8)
@@ -205,7 +205,7 @@ end
 sysc = mtkcompile(sys; warn_initialize_determined = false)
 prob = ODEProblem(sysc, [], (0.0, 3.0); warn_initialize_determined = false)
 
-sol = solve(prob, RadauIIA5(autodiff=AutoForwardDiff(), κ = 0.005), abstol = 1.1e-8, reltol = 0.5e-9, saveat = 0.0001, maxiters = 1e8)
+sol = solve(prob, RadauIIA5(autodiff=AutoForwardDiff(), κ = 0.005), abstol = 1e-8, reltol = 1e-9, saveat = 0.0001, maxiters = 1e8)
 
 time    = sol.t
 ω_rpm   = sol[sys.gen.ωₘ] .* (30 / π)    # rad/s → RPM
