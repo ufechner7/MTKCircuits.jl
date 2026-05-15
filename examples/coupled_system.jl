@@ -178,7 +178,7 @@ end
 sysc = mtkcompile(sys; warn_initialize_determined = false)
 prob = ODEProblem(sysc, [], (0.0, 15.0); warn_initialize_determined = false)
 
-sol = solve(prob, Rodas5P(), abstol = 1.0e-9, reltol = 1.0e-12, dense = false)
+sol = solve(prob, Rodas5P(), dt = 0.00001, adaptive = false, maxiters = Int(1.0e9))
 
 time   = sol.t
 v_load = sol[sys.rload.v]
