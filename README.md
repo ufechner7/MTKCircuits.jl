@@ -80,7 +80,7 @@ Both give very similar results when running the simulation.
 
 ## Two phase examples
 
-I created two simplified examples with a synchronous machine and a rectifier:
+I created two simplified examples with a synchronous machine and an H-bridge rectifier:
 
 ```text
 coupled_system_mwe2.jl
