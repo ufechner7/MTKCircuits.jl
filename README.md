@@ -1,9 +1,18 @@
 # Test cases for electrical circuits, using ModelingTookit (MTK)
 
 ## Installation
-```
+
+```bash
 git clone https://github.com/ufechner7/MTKCircuits.git
 cd MTKCircuits.jl
+julia --project
+```
+
+and then in Julia:
+
+```julia
+using Pkg
+Pkg.instantiate()
 ```
 
 ## 3 Phase Rectifier
@@ -11,5 +20,7 @@ cd MTKCircuits.jl
 ![3 Phase Rectifier](image.png)
 
 To run the example:
-```
+
+```julia
+include("examples/rectifier.jl)
 ```
