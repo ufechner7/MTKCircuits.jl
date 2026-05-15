@@ -36,6 +36,8 @@ After calling `mtkcompile()` the system is a pure DAE system without any differe
 
 ![Synchronous Machine](image-2.png)
 
+![Synchronous_Machine_MTK](image-3.png)
+
 To run the example:
 
 ```julia
