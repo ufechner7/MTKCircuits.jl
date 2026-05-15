@@ -40,21 +40,20 @@ begin
 	                          RMSVoltage = 220.0,
 	                          Phase      = 0.0,
 	                          Freq       = 50.0,
-	                          τ          = 1e-6)
+	                          τ_init     = 1e-6)
 	    @named pin_a = Pin()
 	    @named pin_b = Pin()
 	    @named pin_c = Pin()
 	    @named pin_n = Pin()
 	
-	    @parameters RMSVoltage=RMSVoltage  Phase=Phase  Freq=Freq  τ=τ
-	
-Vpeak = RMSVoltage * sqrt(2.0)
-	    ramp  = 1 - exp(-t / τ)
+	    @parameters RMSVoltage=RMSVoltage  Phase=Phase  Freq=Freq  τ=τ_init
+	    @variables ramp(t) = 0.0
 	
 	    eqs = [
-	        pin_a.v - pin_n.v ~ ramp * Vpeak * sin(2π * Freq * t + Phase),
-	        pin_b.v - pin_n.v ~ ramp * Vpeak * sin(2π * Freq * t + Phase - 2π/3),
-	        pin_c.v - pin_n.v ~ ramp * Vpeak * sin(2π * Freq * t + Phase - 4π/3),
+	        ramp ~ 1 - exp(-t / τ),
+	        pin_a.v - pin_n.v ~ ramp * RMSVoltage * sqrt(2.0) * sin(2π * Freq * t + Phase),
+	        pin_b.v - pin_n.v ~ ramp * RMSVoltage * sqrt(2.0) * sin(2π * Freq * t + Phase - 2π/3),
+	        pin_c.v - pin_n.v ~ ramp * RMSVoltage * sqrt(2.0) * sin(2π * Freq * t + Phase - 4π/3),
 	
 	        pin_a.i + pin_b.i + pin_c.i + pin_n.i ~ 0,
 	    ]
@@ -109,9 +108,9 @@ Vpeak = RMSVoltage * sqrt(2.0)
                                RMSVoltage = 9.0,
                                Freq       = 50.0,
                                R_load     = 10.0,
-                               I_S        = 1e-6,
-                               n_ideal    = 1.0,
-                               T_K        = 293.15)
+                               I_S        = 1e-6,    # saturation current, unused in this example
+                               n_ideal    = 1.0,     # ideality factor, unused in this example
+                               T_K        = 293.15)  # temperature in Kelvin, unused in this example
 
     
     @named src = SourceAC3(RMSVoltage = RMSVoltage, Freq = Freq, Phase = 0.0)
