@@ -13,6 +13,7 @@ using ModelingToolkit: t_nounits as t
 using ModelingToolkitStandardLibrary.Electrical
 using ModelingToolkitStandardLibrary.Blocks
 using OrdinaryDiffEq
+using ControlPlots
 
 # Single Shockley diode
 function ShockleyDiode(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
@@ -62,7 +63,7 @@ function PMSG(; name, R = 0.05, L = 0.000635, Ψ = 0.192, J = 0.011, F = 0.00188
         systems = [input1, pin_a, pin_n], name)
 end
 
-@named aero   = Constant(k = -97)
+@named aero   = Constant(k = -97/100)
 @named gen    = PMSG(p = 4)
 @named bridge = DiodeBridge()
 @named rload  = Resistor(R = 10.0)
@@ -84,5 +85,16 @@ eqs = [
 
 @named sys = System(eqs, t; systems = [aero, gen, rload, leak_p, leak_n, bridge, cap, gnd])
 sysc = mtkcompile(sys; warn_initialize_determined = false)
-prob = ODEProblem(sysc, [], (0.0, 1.0); warn_initialize_determined = false)
-nothing
+prob = ODEProblem(sysc, [], (0.0, 30.0); warn_initialize_determined = false)
+
+sol = solve(prob, Rodas5P(), abstol = 1e-9, reltol = 1e-12, dense = false, saveat = 0.0001)
+
+time    = sol.t
+ω_rpm   = sol[gen.ωₘ] .* (30 / π)        # rad/s → RPM
+v_dc    = sol[cap.v]                       # DC-bus voltage
+i_a     = sol[gen.ia]                      # armature current
+i_load  = v_dc ./ 10.0                     # DC load current (R_load = 10 Ω)
+
+plotx(time, ω_rpm, v_dc, i_load, i_a;
+      ylabels = ["Speed [RPM]", "DC voltage [V]", "Load current [A]", "Armature current [A]"],
+      labels  = ["ωₘ", "v_dc", "i_load", "ia"])
