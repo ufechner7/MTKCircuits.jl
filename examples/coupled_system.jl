@@ -49,14 +49,26 @@ function DiodeBridge(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
     @named R4 = Resistor(R = 1.0e8)
     @named R5 = Resistor(R = 1.0e8)
     @named R6 = Resistor(R = 1.0e8)
+    @named RS1 = Resistor(R = 0.02)
+    @named RS2 = Resistor(R = 0.02)
+    @named RS3 = Resistor(R = 0.02)
+    @named RS4 = Resistor(R = 0.02)
+    @named RS5 = Resistor(R = 0.02)
+    @named RS6 = Resistor(R = 0.02)
 
     eqs = [
 
         connect(D1.p, D2.n),
         connect(D3.p, D4.n),
         connect(D5.p, D6.n),
-        connect(D1.n, D3.n, D5.n),
-        connect(D2.p, D4.p, D6.p),
+        connect(D1.n, RS1.p),
+        connect(D3.n, RS3.p),
+        connect(D5.n, RS5.p),
+        connect(RS1.n, RS3.n, RS5.n),
+        connect(RS2.n, D2.p),
+        connect(RS4.n, D4.p),
+        connect(RS6.n, D6.p),
+        connect(RS2.p, RS4.p, RS6.p),
         connect(D1.p, R1.p),
         connect(D1.n, R1.n),
         connect(D2.p, R2.p),
@@ -72,7 +84,7 @@ function DiodeBridge(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
 
     ]
 
-    return System(eqs, t; systems = [D1, D2, D3, D4, D5, D6, R1, R2, R3, R4, R5, R6], name)
+    return System(eqs, t; systems = [D1, D2, D3, D4, D5, D6, R1, R2, R3, R4, R5, R6, RS1, RS2, RS3, RS4, RS5, RS6], name)
 end
 
 function PMSG(;
@@ -134,7 +146,7 @@ end
 begin
     function WindDiodes(; name, R_L = 10.0, p = 4)
 
-        @named aero = Constant(k = -97/5)
+        @named aero = Constant(k = -97/4)
         #@named aero = Ramp(offset=0.0, height=-97.24, duration=15.0, start_time=0.0)
         @named gen = PMSG(p = p)
         @named zbridge = DiodeBridge()
@@ -151,8 +163,8 @@ begin
             connect(gen.pin_a, zbridge.D1.p, zbridge.D2.n),
             connect(gen.pin_b, zbridge.D3.p, zbridge.D4.n),
             connect(gen.pin_c, zbridge.D5.p, zbridge.D6.n),
-            connect(rload.p, zbridge.D1.n, zbridge.D3.n, zbridge.D5.n),
-            connect(rload.n, zbridge.D2.p, zbridge.D4.p, zbridge.D6.p),
+            connect(rload.p, zbridge.RS1.n, zbridge.RS3.n, zbridge.RS5.n),
+            connect(rload.n, zbridge.RS2.p, zbridge.RS4.p, zbridge.RS6.p),
             connect(rload.p, leak_p.p), connect(leak_p.n, gnd.g),
             connect(rload.n, leak_n.p), connect(leak_n.n, gnd.g),
             connect(cap.p, rload.p),
@@ -175,7 +187,7 @@ end
 sysc = mtkcompile(sys; warn_initialize_determined = false)
 prob = ODEProblem(sysc, [], (0.0, 3.0); warn_initialize_determined = false)
 
-sol = solve(prob, RadauIIA5(autodiff=AutoForwardDiff(), κ = 0.005), abstol = 1e-8, reltol = 0.5e-9, saveat = 0.0001)
+sol = solve(prob, RadauIIA5(autodiff=AutoForwardDiff(), κ = 0.005), abstol = 1e-8, reltol = 0.5e-9, saveat = 0.0001, maxiters = 1e7)
 
 time    = sol.t
 ω_rpm   = sol[sys.gen.ωₘ] .* (30 / π)    # rad/s → RPM
