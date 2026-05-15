@@ -1,6 +1,7 @@
 using ModelingToolkit
 using ModelingToolkit: t_nounits as t
 using ModelingToolkitStandardLibrary.Electrical
+using ModelingToolkitStandardLibrary.Blocks
 using OrdinaryDiffEq
 using Plots
 
@@ -27,6 +28,7 @@ begin
 
         @parameters R = R L = L Ψ = Ψ J = J F = F p = p Tf = Tf
         @variables  ia(t) = 0 ib(t) = 0 ic(t) = 0 ωₘ(t) = 0 Θ(t) = 0 Tₑ(t) = 0
+        D = Differential(t)
 
         eqs = [
 
