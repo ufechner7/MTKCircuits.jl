@@ -24,3 +24,6 @@ To run the example:
 ```julia
 include("examples/rectifier.jl)
 ```
+
+**Remark:**
+After calling `mtkcompile()` the system is a pure DAE system without any differential state.
