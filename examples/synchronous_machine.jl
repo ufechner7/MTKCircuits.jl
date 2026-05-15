@@ -5,7 +5,6 @@ using ModelingToolkitStandardLibrary.Blocks
 using OrdinaryDiffEq
 using ControlPlots, LaTeXStrings
 
-
 function PMSG(;
         name,
         R = 0.05,
