@@ -134,14 +134,14 @@ end
 begin
     function WindDiodes(; name, R_L = 10.0, p = 4)
 
-        @named aero = Constant(k = -97/100)
+        @named aero = Constant(k = -97/10)
         #@named aero = Ramp(offset=0.0, height=-97.24, duration=15.0, start_time=0.0)
         @named gen = PMSG(p = p)
         @named zbridge = DiodeBridge()
         @named rload = Resistor(R = R_L)
         @named gnd = Ground()   # fija V_neutro = 0
-        @named leak_p = Resistor(R = 1.0e9)
-        @named leak_n = Resistor(R = 1.0e9)
+        @named leak_p = Resistor(R = 1.0e8)
+        @named leak_n = Resistor(R = 1.0e8)
         @named cap = Capacitor(C = 1.0e-6, v = 0.0)
 
         eqs = [
