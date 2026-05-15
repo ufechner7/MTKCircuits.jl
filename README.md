@@ -63,3 +63,14 @@ The simulation finishes without error, but with one warning:
 ```
 
 The result does not look correct, though.
+
+## Simplified examples
+I created two simplified examples with a synchronous machine and a rectifier:
+
+```text
+coupled_system_mwe.jl
+mwe_flat.jl
+```
+
+Both work. The first one gives the "Did not converge..." warning, the second one not.
+Both give very similar results when running the simulation.
