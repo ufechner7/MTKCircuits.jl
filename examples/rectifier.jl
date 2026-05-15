@@ -136,8 +136,8 @@ begin
 
 	@named circuitbridge =  CircuitBridge(RMSVoltage = 9.0, Freq = 50.0, R_load = 100.0)
 	
-	sysBridge  = mtkcompile(circuitbridge)
-	probBridge = ODEProblem(sysBridge, [], (0.0, 0.1))
+	sysBridge  = mtkcompile(circuitbridge; warn_initialize_determined = false)
+	probBridge = ODEProblem(sysBridge, [], (0.0, 0.1); warn_initialize_determined=false)
 	
 	solBridge  = solve(probBridge,Rodas5P(),abstol=1e-9, reltol=1e-12)
 	plot(solBridge, idxs = [circuitbridge.rload.p.i])
