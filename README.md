@@ -25,5 +25,9 @@ To run the example:
 include("examples/rectifier.jl)
 ```
 
+**Result:*
+
+![Rectifier output](image-1.png)
+
 **Remark:**
 After calling `mtkcompile()` the system is a pure DAE system without any differential state.
