@@ -139,6 +139,6 @@ begin
 	sysBridge  = mtkcompile(circuitbridge; warn_initialize_determined = false)
 	probBridge = ODEProblem(sysBridge, [], (0.0, 0.1); warn_initialize_determined=false)
 	
-	solBridge  = solve(probBridge,Rodas5P(),abstol=1e-9, reltol=1e-12)
+	solBridge  = solve(probBridge, Rodas5P(), abstol=1e-9, reltol=1e-12, dense=false)
 	plot(solBridge, idxs = [circuitbridge.rload.p.i])
 end
