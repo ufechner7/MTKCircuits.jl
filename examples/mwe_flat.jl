@@ -23,6 +23,7 @@
 using ModelingToolkit
 using ModelingToolkit: t_nounits as t
 using OrdinaryDiffEq
+using ControlPlots
 
 D = Differential(t)
 
@@ -78,4 +79,14 @@ eqs = [
 @named sys = System(eqs, t)
 sysc = mtkcompile(sys; warn_initialize_determined = false)
 prob = ODEProblem(sysc, [], (0.0, 1.0); warn_initialize_determined = false)
-nothing
+
+sol = solve(prob, Rodas5P(), abstol = 1e-9, reltol = 1e-12, dense = false)
+
+time  = sol.t
+ω_rpm = sol[ωₘ] .* (30 / π)        # rad/s → RPM
+v_dc  = sol[v_cap]                   # DC-bus voltage (= vp − vn)
+i_a   = sol[ia]                      # armature current
+
+plotx(time, ω_rpm, v_dc, i_a;
+      ylabels = ["Speed [RPM]", "DC voltage [V]", "Armature current [A]"],
+      labels  = ["ωₘ", "v_dc", "ia"])
