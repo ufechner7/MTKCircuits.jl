@@ -3,7 +3,7 @@ using ModelingToolkit: t_nounits as t
 using ModelingToolkitStandardLibrary.Electrical
 using ModelingToolkitStandardLibrary.Blocks
 using OrdinaryDiffEq
-using ControlPlots
+using ControlPlots, LaTeXStrings
 
 
 function PMSG(;
@@ -124,8 +124,9 @@ end
 
 sysWindResistive = mtkcompile(SystemWindResistive, warn_initialize_determined = false)
 
-probWindResistive = ODEProblem(sysWindResistive, [], (0.0, 15.0), warn_initialize_determined = false)
+t_stop = 0.15 # was: 15s
+probWindResistive = ODEProblem(sysWindResistive, [], (0.0, t_stop), warn_initialize_determined = false)
 solWindResistive = solve(probWindResistive, Rodas5P(), dt = 0.00001, adaptive = false, maxiters = Int(1.0e9))
 ia    = solWindResistive[SystemWindResistive.Aload.pin_a.i]
 time  = solWindResistive.t
-plot(time, [ia]; xlabel="time [s]", ylabel="ia [A]", labels=["pin_a current"])
+plot(time, [ia]; xlabel="time [s]", ylabel=L"I_a~[A]", labels=["pin_a current"])
