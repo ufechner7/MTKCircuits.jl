@@ -3,6 +3,7 @@ using ModelingToolkit: t_nounits as t
 using ModelingToolkitStandardLibrary.Electrical
 using ModelingToolkitStandardLibrary.Blocks
 using OrdinaryDiffEq
+using OrdinaryDiffEqFIRK: RadauIIA5
 using ControlPlots
 
 function ShockleyDiode(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
@@ -174,7 +175,7 @@ end
 sysc = mtkcompile(sys; warn_initialize_determined = false)
 prob = ODEProblem(sysc, [], (0.0, 3.0); warn_initialize_determined = false)
 
-sol = solve(prob, Rodas5P(), dt = 0.0001, adaptive = false, maxiters = Int(1.0e7))
+sol = solve(prob, RadauIIA5(), abstol = 1e-8, reltol = 1e-8, saveat = 0.0001)
 
 time    = sol.t
 ω_rpm   = sol[sys.gen.ωₘ] .* (30 / π)    # rad/s → RPM
