@@ -62,9 +62,18 @@ The simulation finishes without error, but with one warning:
 └ @ Symbolics ~/.julia/packages/Symbolics/oZEAe/src/variable.jl:451
 ```
 
-Using the RadauIIA5 solver, the example works:
+Using the RadauIIA5 solver, the example works if the DC voltage is below 210V.
 
 ![3-phase example](image-5.png)
+
+## High voltage, coupled system
+
+For higher DC voltages (here 928 V) it is necessary to add a small (here 650 pF) capacitor in parallel to the diodes, and also a very small resistor (here 1 mOhm) in series.
+
+Example:
+```
+include("examples/coupled_system2.jl)
+```
 
 ## Simplified examples
 
