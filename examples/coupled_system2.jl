@@ -55,12 +55,12 @@ function DiodeBridge(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
     @named R4 = Resistor(R = 1.0e8)
     @named R5 = Resistor(R = 1.0e8)
     @named R6 = Resistor(R = 1.0e8)
-    @named RS1 = Resistor(R = 0.02)
-    @named RS2 = Resistor(R = 0.02)
-    @named RS3 = Resistor(R = 0.02)
-    @named RS4 = Resistor(R = 0.02)
-    @named RS5 = Resistor(R = 0.02)
-    @named RS6 = Resistor(R = 0.02)
+    @named RS1 = Resistor(R = 0.001)
+    @named RS2 = Resistor(R = 0.001)
+    @named RS3 = Resistor(R = 0.001)
+    @named RS4 = Resistor(R = 0.001)
+    @named RS5 = Resistor(R = 0.001)
+    @named RS6 = Resistor(R = 0.001)
 
     eqs = [
 
