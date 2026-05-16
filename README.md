@@ -71,7 +71,7 @@ Using the RadauIIA5 solver, the example works if the DC voltage is below 210V.
 For higher DC voltages (here 928 V) it is necessary to add a small (here 650 pF) capacitor in parallel to the diodes, and also a very small resistor (here 1 mOhm) in series.
 
 Example:
-```
+```julia
 include("examples/coupled_system2.jl)
 ```
 
