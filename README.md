@@ -75,6 +75,11 @@ Example:
 include("examples/coupled_system2.jl)
 ```
 
+The following solver parameters where used:
+```julia
+sol = solve(prob, RadauIIA5(κ = 0.005), abstol = 1e-7, reltol = 1e-8, saveat = 0.000025, maxiters = 5e6)
+```
+
 ## Simplified examples
 
 I created two simplified examples with a synchronous machine and a rectifier:
