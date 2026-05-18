@@ -5,6 +5,10 @@
 
 export JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager
 
+# Suppress verbose CondaPkg logs
+export JULIA_CONDAPKG_VERBOSITY="0"
+export JULIA_CONDAPKG_LOG="warn"
+
 # Avoid OpenMP duplicate-runtime conflict on Windows (libiomp5md.dll vs libomp.dll)
 case "$(uname -s)" in
     MINGW*|MSYS*|CYGWIN*) export KMP_DUPLICATE_LIB_OK=TRUE ;;
