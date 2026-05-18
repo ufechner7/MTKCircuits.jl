@@ -5,6 +5,11 @@
 
 export JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager
 
+# Avoid OpenMP duplicate-runtime conflict on Windows (libiomp5md.dll vs libomp.dll)
+case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*) export KMP_DUPLICATE_LIB_OK=TRUE ;;
+esac
+
 USE_KAIMON=false
 
 julia_version=$(julia --version | awk '{print($3)}')
