@@ -102,7 +102,13 @@ function DiodeBridge(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
 
     ]
 
-    return System(eqs, t; systems = [D1, D2, D3, D4, D5, D6, C1, C2, C3, C4, C5, C6, R1, R2, R3, R4, R5, R6, RS1, RS2, RS3, RS4, RS5, RS6], name)
+    return System(eqs, t;
+        systems = [D1, D2, D3, D4, D5, D6, C1, C2, C3, C4, C5, C6, R1, R2, R3, R4, R5, R6, RS1, RS2, RS3, RS4, RS5, RS6],
+        guesses = [RS1.v => 0.0, RS2.v => 0.0, RS3.v => 0.0,
+                   RS4.v => 0.0, RS5.v => 0.0, RS6.v => 0.0,
+                   RS1.p.i => 0.0, RS2.p.i => 0.0, RS3.p.i => 0.0,
+                   RS4.p.i => 0.0, RS5.p.i => 0.0, RS6.p.i => 0.0],
+        name)
 end
 
 function PMSG(;
@@ -194,6 +200,7 @@ begin
         return System(
             eqs, t;
             systems = [aero, gen, rload, leak_p, leak_n, zbridge, cap, gnd],
+            guesses = [leak_p.p.i => 0.0, leak_n.p.i => 0.0],
             name
         )
     end
@@ -203,13 +210,7 @@ end
 @named sys = WindDiodes(R_L = 10.0, p = 4)
 
 sysc = mtkcompile(sys; warn_initialize_determined = false)
-guesses = Dict(
-    sys.zbridge.RS1.v   => 0.0,
-    sys.zbridge.RS6.p.i => 0.0,
-    sys.zbridge.RS4.p.i => 0.0,
-    sys.leak_n.p.i      => 0.0,
-)
-prob = ODEProblem(sysc, [], (0.0, 1.0); guesses, warn_initialize_determined = false)
+prob = ODEProblem(sysc, [], (0.0, 1.0); warn_initialize_determined = false)
 
 sol = solve(prob, RadauIIA5(κ = 0.005), abstol = 1e-7, reltol = 1e-8, saveat = 0.000025, maxiters = 5e6)
 
