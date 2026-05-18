@@ -1,9 +1,13 @@
+using Timers
+tic()
 using ModelingToolkit
 using ModelingToolkit: t_nounits as t
 using ModelingToolkitStandardLibrary.Electrical
 using ModelingToolkitStandardLibrary.Blocks
 using OrdinaryDiffEq
 using ControlPlots, LaTeXStrings
+
+toc("packages loaded")
 
 function PMSG(;
         name,
@@ -102,6 +106,7 @@ function WindResistive(; name, R_L = 10.0, p = 4)
         connect(gen.pin_b, Aload.pin_b),
         connect(gen.pin_c, Aload.pin_c),
 
+        connect(gen.pin_n, Aload.pin_n),
         connect(gen.pin_n, gnd.g),
     ]
 
@@ -118,7 +123,9 @@ sysWindResistive = mtkcompile(SystemWindResistive, warn_initialize_determined = 
 
 t_stop = 0.15 # was: 15s
 probWindResistive = ODEProblem(sysWindResistive, [], (0.0, t_stop), warn_initialize_determined = false)
+toc("ode problem created")
 solWindResistive = solve(probWindResistive, Rodas5P(), dt = 0.00001, adaptive = false, maxiters = Int(1.0e9))
+toc("solution obtained")
 ia    = solWindResistive[SystemWindResistive.Aload.pin_a.i]
 time  = solWindResistive.t
 plot(time, [ia]; xlabel="time [s]", ylabel=L"I_a~[A]", labels=["pin_a current"])
