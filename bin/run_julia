@@ -41,4 +41,13 @@ if [[ "$USE_KAIMON" == "true" ]]; then
 fi
 # julia_init+='using MTKCiruits; function menu(); include("examples/menu.jl"); end'
 
-julia --project -i -e "$julia_init" "$@"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+SYSIMAGE="$PROJECT_DIR/sys_MTKCircuits.so"
+
+sysimage_flag=()
+if [[ -f "$SYSIMAGE" ]]; then
+    sysimage_flag=(--sysimage "$SYSIMAGE")
+fi
+
+julia --project "${sysimage_flag[@]}" -i -e "$julia_init" "$@"
