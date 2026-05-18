@@ -1,3 +1,4 @@
+using Timers; tic()
 using ModelingToolkit
 using ModelingToolkit: t_nounits as t
 using ModelingToolkitStandardLibrary.Electrical
@@ -5,6 +6,7 @@ using ModelingToolkitStandardLibrary.Blocks
 using OrdinaryDiffEq
 using OrdinaryDiffEqFIRK: RadauIIA5
 using ControlPlots
+toc("Packages loaded")
 
 function ShockleyDiode(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
 
@@ -209,10 +211,14 @@ end
 
 @named sys = WindDiodes(R_L = 10.0, p = 4)
 
+toc("Systems defined")
 sysc = mtkcompile(sys; warn_initialize_determined = false)
+toc("System symbolically simplified")
 prob = ODEProblem(sysc, [], (0.0, 1.0); warn_initialize_determined = false)
+toc("ODEProblem created")
 
 sol = solve(prob, RadauIIA5(κ = 0.005), abstol = 1e-7, reltol = 1e-8, saveat = 0.000025, maxiters = 5e6)
+toc("ODE solved")
 
 time    = sol.t
 ω_rpm   = sol[sys.gen.ωₘ] .* (30 / π)    # rad/s → RPM
