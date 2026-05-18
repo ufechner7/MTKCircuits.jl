@@ -22,7 +22,7 @@ Pkg.instantiate()
 To run the example:
 
 ```julia
-include("examples/rectifier.jl)
+include("examples/rectifier.jl")
 ```
 
 **Result:**
@@ -41,7 +41,7 @@ After calling `mtkcompile()` the system is a pure DAE system without any differe
 To run the example:
 
 ```julia
-include("examples/synchronous_machine.jl)
+include("examples/synchronous_machine.jl")
 ```
 
 ## Coupled System
@@ -51,7 +51,7 @@ This system combines the synchronous machine and the rectifier.
 To run the example:
 
 ```julia
-include("examples/coupled_system.jl)
+include("examples/coupled_system.jl")
 ```
 
 The simulation finishes without error, but with one warning:
@@ -72,7 +72,7 @@ For higher DC voltages (here 928 V) it is necessary to add a small (here 650 pF)
 
 Example:
 ```julia
-include("examples/coupled_system2.jl)
+include("examples/coupled_system2.jl")
 ```
 
 The following solver parameters where used:
