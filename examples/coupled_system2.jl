@@ -203,7 +203,13 @@ end
 @named sys = WindDiodes(R_L = 10.0, p = 4)
 
 sysc = mtkcompile(sys; warn_initialize_determined = false)
-prob = ODEProblem(sysc, [], (0.0, 1.0); warn_initialize_determined = false)
+guesses = Dict(
+    sys.zbridge.RS1.v   => 0.0,
+    sys.zbridge.RS6.p.i => 0.0,
+    sys.zbridge.RS4.p.i => 0.0,
+    sys.leak_n.p.i      => 0.0,
+)
+prob = ODEProblem(sysc, [], (0.0, 1.0); guesses, warn_initialize_determined = false)
 
 sol = solve(prob, RadauIIA5(κ = 0.005), abstol = 1e-7, reltol = 1e-8, saveat = 0.000025, maxiters = 5e6)
 
