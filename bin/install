@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# SPDX-FileCopyrightText: 2022 Uwe Fechner
+# SPDX-License-Identifier: MIT
+
+# Copy the default manifest for the current Julia version and instantiate the project.
+
+julia_version=$(julia --version | awk '{print($3)}')
+julia_major=${julia_version:0:3}
+if [[ $julia_major == "1.1" ]]; then
+    julia_major=${julia_version:0:4}
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+DEFAULT_MANIFEST="$PROJECT_DIR/Manifest-v${julia_major}.toml.default"
+MANIFEST="$PROJECT_DIR/Manifest.toml"
+
+if [[ -f "$DEFAULT_MANIFEST" ]]; then
+    echo "Copying $DEFAULT_MANIFEST to $MANIFEST ..."
+    cp "$DEFAULT_MANIFEST" "$MANIFEST"
+else
+    echo "No default manifest found for Julia $julia_major (looked for $DEFAULT_MANIFEST)."
+    echo "Proceeding with existing or empty manifest."
+fi
+
+echo "Instantiating project..."
+julia --project="$PROJECT_DIR" -e 'using Pkg; Pkg.instantiate()'
+echo "Done."
