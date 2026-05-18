@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# SPDX-FileCopyrightText: 2022 Uwe Fechner
+# SPDX-License-Identifier: MIT
+
+# Create a Julia system image including all project packages.
+# The system image is saved as sys_MTKCircuits.so in the project root.
+# Usage: bin/create_sys_image
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+julia --project="$PROJECT_DIR" "$SCRIPT_DIR/create_sys_image.jl"
