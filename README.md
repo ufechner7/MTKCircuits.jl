@@ -54,15 +54,7 @@ To run the example:
 include("examples/coupled_system.jl")
 ```
 
-The simulation finishes without error, but with one warning:
-
-```text
-┌ Warning: Did not converge after `maxiters = 100` substitutions. Either there \
-│ is a cycle in the rules or `maxiters` needs to be higher.
-└ @ Symbolics ~/.julia/packages/Symbolics/oZEAe/src/variable.jl:451
-```
-
-Using the RadauIIA5 solver, the example works if the DC voltage is below 210V.
+Using the RadauIIA5 solver, the example works if the DC voltage is below 137V.
 
 ![3-phase example](image-5.png)
 
