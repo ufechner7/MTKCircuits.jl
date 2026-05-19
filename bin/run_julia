@@ -41,7 +41,7 @@ julia_init='using Revise; '
 if [[ "$USE_KAIMON" == "true" ]]; then
     julia_init+='using Kaimon; Gate.serve(); '
 fi
-# julia_init+='using MTKCiruits; function menu(); include("examples/menu.jl"); end'
+julia_init+='function menu(); include("examples/menu.jl"); end'
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
