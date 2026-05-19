@@ -3,3 +3,4 @@ Manifest.toml
 Manifest-v1.12.toml
 sys_MTKCircuits.so
 examples/LocalPreferences.toml
+LocalPreferences.toml
