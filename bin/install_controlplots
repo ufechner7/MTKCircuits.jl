@@ -57,6 +57,7 @@ if [[ "$(basename "$(pwd)")" == "bin" ]]; then
     cd ..
 fi
 
+. "bin/setup_env"  # Load the shared setup_env script.
 
 # ── Interactive backend selection ─────────────────────────────────────────────
 
@@ -209,20 +210,24 @@ if [[ "$_backend" == "system" ]]; then
         echo "Removing .CondaPkg (switching from CondaPkg to system Python)..."
         rm -rf ".CondaPkg"
     fi
+    # Unset JULIA_PYTHONCALL_EXE so the LocalPreferences.toml exe setting takes
+    # effect (setup_env may have set it to the now-deleted CondaPkg Python).
+    unset JULIA_PYTHONCALL_EXE
 
     echo ""
     echo "Saving python_exe=$_syspython to LocalPreferences.toml..."
-    # Write (or update) LocalPreferences.toml in the examples directory so that
-    # PythonCall always uses the system Python when running examples.
+    # Write (or update) the root LocalPreferences.toml so that PythonCall uses
+    # the system Python for all projects in this repository.
     _prefs_file="LocalPreferences.toml"
     if [[ -f "$_prefs_file" ]]; then
-        # Remove any existing [PythonCall] and legacy [PyCall] sections.
+        # Remove any existing [PythonCall], [CondaPkg], and legacy [PyCall] sections.
         _tmp=$(mktemp)
         awk '
-            /^\[PythonCall\]/ { in_pc=1; next }
-            /^\[PyCall\]/ { in_pc=1; next }
-            in_pc && /^\[/ { in_pc=0 }
-            !in_pc { print }
+            /^\[PythonCall\]/ { in_sec=1; next }
+            /^\[PyCall\]/ { in_sec=1; next }
+            /^\[CondaPkg\]/ { in_sec=1; next }
+            in_sec && /^\[/ { in_sec=0 }
+            !in_sec { print }
         ' "$_prefs_file" > "$_tmp"
         mv "$_tmp" "$_prefs_file"
     fi
@@ -230,6 +235,9 @@ if [[ "$_backend" == "system" ]]; then
         echo ""
         echo "[PythonCall]"
         echo "exe = \"$_syspython\""
+        echo ""
+        echo "[CondaPkg]"
+        echo "backend = \"Null\""
     } >> "$_prefs_file"
     echo "Written to $_prefs_file."
 
@@ -242,20 +250,21 @@ if [[ "$_backend" == "system" ]]; then
 # ── CondaPkg backend ──────────────────────────────────────────────────────────
 
 elif [[ "$_backend" == "conda" ]]; then
-    # Remove any [PythonCall] exe setting and legacy [PyCall] section so that
-    # PythonCall falls back to the CondaPkg-managed Python.
-    _prefs_file="examples/LocalPreferences.toml"
+    # Remove [PythonCall] exe, [CondaPkg] backend override, and legacy [PyCall]
+    # so PythonCall falls back to the CondaPkg-managed Python.
+    _prefs_file="LocalPreferences.toml"
     if [[ -f "$_prefs_file" ]]; then
         _tmp=$(mktemp)
         awk '
-            /^\[PythonCall\]/ { in_pc=1; next }
-            /^\[PyCall\]/ { in_pc=1; next }
-            in_pc && /^\[/ { in_pc=0 }
-            !in_pc { print }
+            /^\[PythonCall\]/ { in_sec=1; next }
+            /^\[PyCall\]/ { in_sec=1; next }
+            /^\[CondaPkg\]/ { in_sec=1; next }
+            in_sec && /^\[/ { in_sec=0 }
+            !in_sec { print }
         ' "$_prefs_file" > "$_tmp"
         if ! diff -q "$_prefs_file" "$_tmp" &>/dev/null; then
             mv "$_tmp" "$_prefs_file"
-            echo "Removed [PythonCall]/[PyCall] section from $_prefs_file (switching to CondaPkg)."
+            echo "Removed [PythonCall]/[CondaPkg] sections from $_prefs_file (switching to CondaPkg)."
         else
             rm -f "$_tmp"
         fi

@@ -14,6 +14,8 @@ case "$(uname -s)" in
     MINGW*|MSYS*|CYGWIN*) export KMP_DUPLICATE_LIB_OK=TRUE ;;
 esac
 
+. "$(dirname "${BASH_SOURCE[0]}")/setup_env"  # Load the shared setup_env script.
+
 USE_KAIMON=false
 
 julia_version=$(julia --version | awk '{print($3)}')

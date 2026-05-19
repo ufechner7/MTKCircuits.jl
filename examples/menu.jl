@@ -1,7 +1,7 @@
 using REPL.TerminalMenus
 
 examples_dir = joinpath(@__DIR__)
-example_files = filter(f -> splitext(f)[1] != "menu", sort(readdir(examples_dir)))
+example_files = filter(f -> splitext(f)[1] != "menu" && f != "LocalPreferences.toml", sort(readdir(examples_dir)))
 example_names = [[splitext(f)[1] for f in example_files]; "quit"]
 
 while true
