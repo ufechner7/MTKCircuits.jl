@@ -85,7 +85,8 @@ eqs = [
 
 @named sys = System(eqs, t; systems = [aero, gen, rload, leak_p, leak_n, bridge, cap, gnd])
 sysc = mtkcompile(sys; warn_initialize_determined = false)
-prob = ODEProblem(sysc, [], (0.0, 30.0); warn_initialize_determined = false)
+prob = ODEProblem(sysc, [], (0.0, 30.0); warn_initialize_determined = false,
+    missing_guess_value = MissingGuessValue.Constant(0.0))
 
 sol = solve(prob, Rodas5P(), abstol = 1e-9, reltol = 1e-12, dense = false, saveat = 0.0001)
 
