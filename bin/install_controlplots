@@ -205,16 +205,16 @@ if [[ "$_backend" == "system" ]]; then
     # Remove the CondaPkg-managed environment so that setup_env does not set
     # JULIA_PYTHONCALL_EXE to the conda Python, which would override the system
     # Python configured below.
-    if [[ -d "examples/.CondaPkg" ]]; then
-        echo "Removing examples/.CondaPkg (switching from CondaPkg to system Python)..."
-        rm -rf "examples/.CondaPkg"
+    if [[ -d ".CondaPkg" ]]; then
+        echo "Removing .CondaPkg (switching from CondaPkg to system Python)..."
+        rm -rf ".CondaPkg"
     fi
 
     echo ""
-    echo "Saving python_exe=$_syspython to examples/LocalPreferences.toml..."
+    echo "Saving python_exe=$_syspython to LocalPreferences.toml..."
     # Write (or update) LocalPreferences.toml in the examples directory so that
     # PythonCall always uses the system Python when running examples.
-    _prefs_file="examples/LocalPreferences.toml"
+    _prefs_file="LocalPreferences.toml"
     if [[ -f "$_prefs_file" ]]; then
         # Remove any existing [PythonCall] and legacy [PyCall] sections.
         _tmp=$(mktemp)
