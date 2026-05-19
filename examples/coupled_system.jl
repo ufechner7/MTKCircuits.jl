@@ -1,3 +1,4 @@
+using Timers; tic()
 using ModelingToolkit
 using ModelingToolkit: t_nounits as t
 using ModelingToolkitStandardLibrary.Electrical
@@ -5,7 +6,6 @@ using ModelingToolkitStandardLibrary.Blocks
 using OrdinaryDiffEq
 using OrdinaryDiffEqFIRK: RadauIIA5
 using ControlPlots
-using Timers; tic()
 toc("Packages loaded")
 
 function ShockleyDiode(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
