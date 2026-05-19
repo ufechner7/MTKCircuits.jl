@@ -5,6 +5,8 @@ using ModelingToolkitStandardLibrary.Blocks
 using OrdinaryDiffEq
 using OrdinaryDiffEqFIRK: RadauIIA5
 using ControlPlots
+using Timers; tic()
+toc("Packages loaded")
 
 function ShockleyDiode(; name, I_S = 1.0e-6, n_ideal = 1.0, T_K = 293.15)
 
@@ -184,10 +186,15 @@ end
 
 @named sys = WindDiodes(R_L = 10.0, p = 4)
 
+toc("Systems defined")
 sysc = mtkcompile(sys; warn_initialize_determined = false)
-prob = ODEProblem(sysc, [], (0.0, 3.0); warn_initialize_determined = false)
+toc("System symbolically simplified")
+prob = ODEProblem(sysc, [], (0.0, 3.0); warn_initialize_determined = false,
+    missing_guess_value = MissingGuessValue.Constant(0.0))
+toc("ODEProblem created")
 
 sol = solve(prob, RadauIIA5(autodiff=AutoForwardDiff(), κ = 0.005), abstol = 1.1e-8, reltol = 0.5e-9, saveat = 0.0001, maxiters = 1e7)
+toc("ODE solved")
 
 time    = sol.t
 ω_rpm   = sol[sys.gen.ωₘ] .* (30 / π)    # rad/s → RPM
