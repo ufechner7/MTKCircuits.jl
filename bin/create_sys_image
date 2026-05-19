@@ -10,4 +10,8 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
+# Set up Python environment variables (JULIA_PYTHONCALL_EXE / JULIA_CONDAPKG_BACKEND)
+# so the sysimage is compiled with the same Python that will be used at runtime.
+. "$SCRIPT_DIR/setup_env"
+
 julia --project="$PROJECT_DIR" "$SCRIPT_DIR/create_sys_image.jl"
