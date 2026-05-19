@@ -15,7 +15,7 @@ using PackageCompiler
 
 project_dir = dirname(@__DIR__)
 sysimage_path = joinpath(project_dir, "sys_MTKCircuits.so")
-precompile_script = joinpath(project_dir, "examples", "mwe_flat.jl")
+precompile_script = joinpath(project_dir, "examples", "coupled_system.jl")
 
 packages = [
     :ControlPlots,

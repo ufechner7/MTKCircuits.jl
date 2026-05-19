@@ -209,3 +209,17 @@ plotx(time, ω_rpm, v_dc, i_load, i_a, i_b, i_c;
       ylabels = ["Speed [RPM]", "DC voltage [V]", "Load current [A]",
                  "ia [A]", "ib [A]", "ic [A]"],
       labels  = ["ωₘ", "v_dc", "i_load", "ia", "ib", "ic"])
+
+# Without system image:
+# Packages loaded 7.06 s
+# Systems defined 24.62 s
+# System symbolically simplified 44.44 s
+# ODEProblem created 59.62 s
+# ODE solved 70.76 s
+
+# With system image:
+# Packages loaded 0.02 s
+# Systems defined 2.11 s
+# System symbolically simplified 5.02 s
+# ODEProblem created 9.82 s
+# ODE solved 13.11 s
