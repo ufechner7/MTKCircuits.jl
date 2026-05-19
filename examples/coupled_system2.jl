@@ -202,7 +202,8 @@ begin
         return System(
             eqs, t;
             systems = [aero, gen, rload, leak_p, leak_n, zbridge, cap, gnd],
-            guesses = [leak_p.p.i => 0.0, leak_n.p.i => 0.0],
+            guesses = [leak_p.p.i => 0.0, leak_n.p.i => 0.0,
+                       rload.p.v => 0.0, rload.n.v => 0.0],
             name
         )
     end
