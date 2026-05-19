@@ -178,6 +178,8 @@ begin
         return System(
             eqs, t;
             systems = [aero, gen, rload, leak_p, leak_n, zbridge, cap, gnd],
+            guesses = [leak_p.p.i => 0.0, leak_n.p.i => 0.0,
+                       rload.p.v => 0.0, rload.n.v => 0.0],
             name
         )
     end
@@ -189,8 +191,7 @@ end
 toc("Systems defined")
 sysc = mtkcompile(sys; warn_initialize_determined = false)
 toc("System symbolically simplified")
-prob = ODEProblem(sysc, [], (0.0, 3.0); warn_initialize_determined = false,
-    missing_guess_value = MissingGuessValue.Constant(0.0))
+prob = ODEProblem(sysc, [], (0.0, 3.0); warn_initialize_determined = false)
 toc("ODEProblem created")
 
 sol = solve(prob, RadauIIA5(autodiff=AutoForwardDiff(), κ = 0.005), abstol = 1.1e-8, reltol = 0.5e-9, saveat = 0.0001, maxiters = 1e7)
