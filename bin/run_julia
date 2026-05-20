@@ -49,6 +49,7 @@ SYSIMAGE="$PROJECT_DIR/sys_MTKCircuits.so"
 
 sysimage_flag=()
 if [[ -f "$SYSIMAGE" ]]; then
+    echo "Found system image!"
     sysimage_flag=(--sysimage "$SYSIMAGE")
 fi
 
